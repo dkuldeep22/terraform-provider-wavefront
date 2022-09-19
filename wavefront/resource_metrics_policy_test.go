@@ -3,6 +3,7 @@ package wavefront
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"testing"
 
 	"github.com/WavefrontHQ/go-wavefront-management-api"
@@ -219,7 +220,7 @@ func testAccCheckWavefrontCustomMetricsPolicy(rulesProvider func() ([]wavefront.
 		if err != nil {
 			return fmt.Errorf("error finding Wavefront Metrics Policy %s", err)
 		}
-		if rs.Primary.ID != string(rune(policy.UpdatedEpochMillis)) {
+		if rs.Primary.ID != strconv.Itoa(policy.UpdatedEpochMillis) {
 			return fmt.Errorf("expected metric policy id of %s does not match %s", rs.Primary.ID, string(rune(policy.UpdatedEpochMillis)))
 		}
 		if len(desiredPolicies) != len(policy.PolicyRules) {

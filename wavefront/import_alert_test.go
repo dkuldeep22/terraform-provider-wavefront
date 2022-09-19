@@ -107,7 +107,7 @@ resource "wavefront_alert" "test_threshold_alert" {
   threshold_targets = {
 	"severe" = "target:${wavefront_alert_target.test_target.id}"
   }
-  
+
   tags = [
     "terraform"
   ]

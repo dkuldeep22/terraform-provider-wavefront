@@ -10,6 +10,7 @@ import (
 const (
 	ipNameKey        = "name"
 	ipDescriptionKey = "description"
+	ipScopeKey       = "scope"
 )
 
 func resourceIngestionPolicy() *schema.Resource {
@@ -30,6 +31,10 @@ func resourceIngestionPolicy() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			ipScopeKey: {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 		},
 	}
 }
@@ -41,6 +46,7 @@ func resourceIngestionPolicyCreate(
 	policy := wavefront.IngestionPolicy{
 		Name:        d.Get(ipNameKey).(string),
 		Description: d.Get(ipDescriptionKey).(string),
+		Scope:       d.Get(ipScopeKey).(string),
 	}
 
 	err := client.Create(&policy)
@@ -78,6 +84,10 @@ func resourceIngestionPolicyRead(
 		return err
 	}
 
+	if err := d.Set(ipScopeKey, policy.Scope); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -101,6 +111,10 @@ func resourceIngestionPolicyUpdate(
 	}
 	if d.HasChange(ipDescriptionKey) {
 		policy.Description = d.Get(ipDescriptionKey).(string)
+	}
+
+	if d.HasChange(ipScopeKey) {
+		policy.Scope = d.Get(ipScopeKey).(string)
 	}
 
 	err = client.Update(&policy)
